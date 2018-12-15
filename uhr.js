@@ -7,16 +7,16 @@
  - Declarations on Top
  - Never Declare Number, String, or Boolean Objects (like new String("John");)
  - Use camelCase for names
- 
+
  Single Responsibility Principle:
  Verschiedene SVG Dokumente können in die Methode zur Informationsextraktion injeziert werden.
- 
+
  Livkovsches Substitutionsprinzip:
- Die SVG Uhr kann durch jede Funktion ersetzt werden, die die Parameter Stunde, Minute und Sekunde erwartet. 
- 
+ Die SVG Uhr kann durch jede Funktion ersetzt werden, die die Parameter Stunde, Minute und Sekunde erwartet.
+
  Don't repeat yourself:
  dreheZeiger dreht alle Zeiger.
- 
+
  Das Dependency Inversion Principle wurde nicht angewandt. Man könnte die DOM Zugriffe komplett abstrahieren. In diesem Dokument sind DOM Zugriffe in den ersten beiden Funktionen und im DOMContentLoaded gekapselt.
 */
 
@@ -27,7 +27,7 @@ function SVG_DETAILS(svgDok) {
         sekundenzeiger: svgDok.getElementById('sekundenzeiger'),
         minutenzeiger: svgDok.getElementById('minutenzeiger'),
         stundenzeiger: svgDok.getElementById('stundenzeiger'),
-        
+
         // Für beste Browser unterstützung verwende nicht die schicke Arrow Syntax als Impementierung eines funktonalen WHERE.
         // (o => ({x: o.getAttribute('cx'), y: o.getAttribute('cy')})) (document.getElementById('mittelkreis'))
         drehpunkt: {
@@ -73,7 +73,7 @@ function getDriftFromSimpleNtp() {
     var anzahlMessungen = 5,
         minDauer = Infinity,
         drift = 0;
-    
+
     // Einzelne Messung wird wegen der Variablen in Funktion gekapselt
     function messung() {
         var davor, danach, http, serverZeit, diffInMs;
@@ -85,7 +85,7 @@ function getDriftFromSimpleNtp() {
         davor = Date.now();
         http.send(); // synchronous
         danach = Date.now();
-        
+
         serverZeit = new Date(http.getResponseHeader('Date')).getTime();
 
         diffInMs = danach - davor;
@@ -103,10 +103,10 @@ function getDriftFromSimpleNtp() {
 function Uhrwerk(anzeige, drift) { // Konstruktor
     this.drift = drift || 0;
     this.eingeschalten = true;
-    
+
     var uhrwerk = this,
         naechsterTick = new Date(Date.now() - uhrwerk.drift);
-    
+
     function ticke() {
         anzeige(naechsterTick.getHours(), naechsterTick.getMinutes(), naechsterTick.getSeconds());
         naechsterTick = new Date(Date.now() + 1000 - uhrwerk.drift);
@@ -124,7 +124,7 @@ window.addEventListener('DOMContentLoaded', function () {
     svgEl.addEventListener("load", function () {
         var analogAnzeige, doppelAnzeige, uhrwerk;
         analogAnzeige = erzeugeAnzeigeAusSvg(svgEl.contentDocument, SVG_DETAILS);
-        
+
         // Nur zur Demonstration der Flexibilität
         doppelAnzeige = function (std, min, sek) {
             analogAnzeige(std, min, sek);
@@ -132,7 +132,7 @@ window.addEventListener('DOMContentLoaded', function () {
                 ("0" + std).slice(-2) + ":" + ("0" + min).slice(-2) + ":" + ("0" + sek).slice(-2);
         };
         uhrwerk = new Uhrwerk(doppelAnzeige);
-        
+
         document.getElementById("zeitquelle").onchange = function () {
             switch (this.value) {
             case "server":
