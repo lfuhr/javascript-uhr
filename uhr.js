@@ -52,7 +52,7 @@ function erzeugeAnzeigeAusSvg(svgDok, svgDetails) {
     };
 }
 
-// Stellt sicher, dass eine Funktion nur einmal aufgerufen werden kann. Nicht mehr in Gebrauch, bin aber mächtig stolz drauf.
+// Deprecated. Stellt sicher, dass eine Funktion nur einmal aufgerufen werden kann.
 function einwegFunktion(f) {
     var ausgefuehrt = false;
     return function () {
@@ -128,7 +128,8 @@ window.addEventListener('DOMContentLoaded', function () {
         // Nur zur Demonstration der Flexibilität
         doppelAnzeige = function (std, min, sek) {
             analogAnzeige(std, min, sek);
-            document.getElementById("digitaluhr").innerHTML = std + ":" + min + ":" + sek;
+            document.getElementById("digitaluhr").innerHTML =
+                ("0" + std).slice(-2) + ":" + ("0" + min).slice(-2) + ":" + ("0" + sek).slice(-2);
         };
         uhrwerk = new Uhrwerk(doppelAnzeige);
         
